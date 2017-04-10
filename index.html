@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="demo.css">
 
 		<script src="lib/twgl.min.js"></script>
+		<script src="lib/stats.min.js"></script>
 	</head>
 
 	<body><canvas id="c"></canvas></body>
@@ -39,6 +40,10 @@
 
 	<script>
 		"use strict";
+		var stats = new Stats();
+		stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+		document.body.appendChild(stats.dom);
+
 		var gl = twgl.getWebGLContext(document.getElementById("c"));
 		var programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
 
@@ -48,6 +53,7 @@
 		var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 
 		function render(time) {
+			stats.begin();
 			twgl.resizeCanvasToDisplaySize(gl.canvas);
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -60,6 +66,7 @@
 			twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 			twgl.setUniforms(programInfo, uniforms);
 			twgl.drawBufferInfo(gl, bufferInfo);
+			stats.end();
 
 			requestAnimationFrame(render);
 		}
